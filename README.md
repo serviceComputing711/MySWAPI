@@ -242,3 +242,36 @@ func (m *SWDB) SearchFilmByName (name []byte) ([]byte) {
     return res
 }
 ```
+
+> 按页检索：每页大小设置为5，从头开始遍历，访问到页区间则加入到输出的结果中。
+> 由于涉及到`[]byte`的拼接，因此，采用`Buffer`流的方法：
+
+```
+/*
+**	search information by page
+**	has 2 arguement
+**	buc: buckets, like people, films, etc
+**	page: page number
+*/
+func (m *SWDB) SearchByPage (buc string, page int) ([]byte) {
+	var buffer bytes.Buffer
+	endNum := 5 * page
+	startNum := endNum - 5
+	currentNum := 0
+	m.db.View(func(tx *bolt.Tx) error {
+        b := tx.Bucket([]byte(buc))
+        c := b.Cursor()
+	    for k, v := c.First(); k != nil; k, v = c.Next() {
+	    	if currentNum < endNum && currentNum >= startNum {
+	    		buffer.Write(v)
+	    	}
+			currentNum++
+			if currentNum == endNum {
+				break
+			}
+		}
+        return nil
+    })
+    return buffer.Bytes()
+}
+```
