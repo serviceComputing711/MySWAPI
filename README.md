@@ -280,6 +280,7 @@ func (m *SWDB) SearchByPage (buc string, page int) ([]byte) {
 本次项目的内容是使用 GO 实现一个 [SWAPI](https://swapi.co/) 服务器端程序。
 ## 项目结构
 ![](images/ProjectIndex.png)
+
 其中：
 - main.go 为程序入口
 - go/ 为路由和 API 的实现
@@ -506,7 +507,9 @@ func NewRouter() *mux.Router {
 ```
 
 > 与 http.ServerMux 不同的是 mux.Router 是完全的正则匹配
+
 > 设置路由路径 /index/，如果访问路径 /idenx/hello 会返回404
+
 > 设置路由路径为 /index/，访问路径 /index也是会报404的,需要设置 r.StrictSlash(true)， /index/ 与 /index 才能匹配
 
 ### 2.3 JWT 身份验证
